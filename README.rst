@@ -39,6 +39,7 @@ It uses these tokens as the basis of its bookkeeping.
 
 
 The two ways to extend it are:
+
 1. Pass in a function as the tokenizer when creating
    your Bayes. The function should expect one argument
    which will be whatever you pass to the train() method.
