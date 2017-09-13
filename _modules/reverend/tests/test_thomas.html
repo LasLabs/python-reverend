@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>reverend.test.test_thomas &#8212; reverend 0.5.0b24 documentation</title>
+    <title>reverend.tests.test_thomas &#8212; reverend 1.0.0b31 documentation</title>
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '0.5.0b24',
+        VERSION:     '1.0.0b31',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -38,7 +38,7 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <h1>Source code for reverend.test.test_thomas</h1><div class="highlight"><pre>
+  <h1>Source code for reverend.tests.test_thomas</h1><div class="highlight"><pre>
 <span></span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Tests for L{reverend.thomas}.</span>
@@ -49,11 +49,12 @@
 <span class="kn">from</span> <span class="nn">reverend.thomas</span> <span class="k">import</span> <span class="n">Bayes</span>
 
 
-<div class="viewcode-block" id="BayesTests"><a class="viewcode-back" href="../../../reverend.test.html#reverend.test.test_thomas.BayesTests">[docs]</a><span class="k">class</span> <span class="nc">BayesTests</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="BayesTests"><a class="viewcode-back" href="../../../reverend.tests.html#reverend.tests.test_thomas.BayesTests">[docs]</a><span class="k">class</span> <span class="nc">BayesTests</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Tests for L{Bayes}.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="BayesTests.test_untrainedGuess"><a class="viewcode-back" href="../../../reverend.test.html#reverend.test.test_thomas.BayesTests.test_untrainedGuess">[docs]</a>    <span class="k">def</span> <span class="nf">test_untrainedGuess</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BayesTests.test_untrained_guess"><a class="viewcode-back" href="../../../reverend.tests.html#reverend.tests.test_thomas.BayesTests.test_untrained_guess">[docs]</a>    <span class="k">def</span> <span class="nf">test_untrained_guess</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The C{guess} method of a L{Bayes} instance with no training data returns</span>
 <span class="sd">        an empty list.</span>

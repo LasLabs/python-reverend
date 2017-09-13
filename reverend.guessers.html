@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>reverend.guessers package &#8212; reverend 0.5.0b24 documentation</title>
+    <title>reverend.guessers package &#8212; reverend 1.0.0b31 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.5.0b24',
+        VERSION:     '1.0.0b31',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="reverend.test package" href="reverend.test.html" />
+    <link rel="next" title="reverend.tests package" href="reverend.tests.html" />
     <link rel="prev" title="reverend package" href="reverend.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -49,36 +49,36 @@
 <span id="reverend-guessers-email-module"></span><h2>reverend.guessers.email module<a class="headerlink" href="#module-reverend.guessers.email" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="reverend.guessers.email.EmailClassifier">
-<em class="property">class </em><code class="descclassname">reverend.guessers.email.</code><code class="descname">EmailClassifier</code><span class="sig-paren">(</span><em>tokenizer=None</em>, <em>combiner=None</em>, <em>dataClass=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/guessers/email.html#EmailClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.guessers.email.EmailClassifier" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">reverend.guessers.email.</code><code class="descname">EmailClassifier</code><span class="sig-paren">(</span><em>tokenizer=None</em>, <em>combiner=None</em>, <em>data_class=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/guessers/email.html#EmailClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.guessers.email.EmailClassifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="reverend.html#reverend.thomas.Bayes" title="reverend.thomas.Bayes"><code class="xref py py-class docutils literal"><span class="pre">reverend.thomas.Bayes</span></code></a></p>
 <dl class="method">
-<dt id="reverend.guessers.email.EmailClassifier.getBodyTokens">
-<code class="descname">getBodyTokens</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/guessers/email.html#EmailClassifier.getBodyTokens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.guessers.email.EmailClassifier.getBodyTokens" title="Permalink to this definition">¶</a></dt>
+<dt id="reverend.guessers.email.EmailClassifier.get_body_tokens">
+<code class="descname">get_body_tokens</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/guessers/email.html#EmailClassifier.get_body_tokens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.guessers.email.EmailClassifier.get_body_tokens" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="reverend.guessers.email.EmailClassifier.getHeaderTokens">
-<code class="descname">getHeaderTokens</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/guessers/email.html#EmailClassifier.getHeaderTokens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.guessers.email.EmailClassifier.getHeaderTokens" title="Permalink to this definition">¶</a></dt>
+<dt id="reverend.guessers.email.EmailClassifier.get_header_tokens">
+<code class="descname">get_header_tokens</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/guessers/email.html#EmailClassifier.get_header_tokens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.guessers.email.EmailClassifier.get_header_tokens" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="reverend.guessers.email.EmailClassifier.getMetaTokens">
-<code class="descname">getMetaTokens</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/guessers/email.html#EmailClassifier.getMetaTokens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.guessers.email.EmailClassifier.getMetaTokens" title="Permalink to this definition">¶</a></dt>
+<dt id="reverend.guessers.email.EmailClassifier.get_meta_tokens">
+<code class="descname">get_meta_tokens</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/guessers/email.html#EmailClassifier.get_meta_tokens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.guessers.email.EmailClassifier.get_meta_tokens" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="reverend.guessers.email.EmailClassifier.getTextHtml">
-<code class="descname">getTextHtml</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/guessers/email.html#EmailClassifier.getTextHtml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.guessers.email.EmailClassifier.getTextHtml" title="Permalink to this definition">¶</a></dt>
+<dt id="reverend.guessers.email.EmailClassifier.get_text_html">
+<code class="descname">get_text_html</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/guessers/email.html#EmailClassifier.get_text_html"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.guessers.email.EmailClassifier.get_text_html" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="reverend.guessers.email.EmailClassifier.getTextPlain">
-<code class="descname">getTextPlain</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/guessers/email.html#EmailClassifier.getTextPlain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.guessers.email.EmailClassifier.getTextPlain" title="Permalink to this definition">¶</a></dt>
+<dt id="reverend.guessers.email.EmailClassifier.get_text_plain">
+<code class="descname">get_text_plain</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/guessers/email.html#EmailClassifier.get_text_plain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.guessers.email.EmailClassifier.get_text_plain" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="reverend.guessers.email.EmailClassifier.getTokens">
-<code class="descname">getTokens</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/guessers/email.html#EmailClassifier.getTokens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.guessers.email.EmailClassifier.getTokens" title="Permalink to this definition">¶</a></dt>
+<dt id="reverend.guessers.email.EmailClassifier.get_tokens">
+<code class="descname">get_tokens</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/guessers/email.html#EmailClassifier.get_tokens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.guessers.email.EmailClassifier.get_tokens" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -134,7 +134,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-reverend.guessers">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="reverend.test.html">reverend.test package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reverend.tests.html">reverend.tests package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="reverend.ui.html">reverend.ui package</a></li>
 </ul>
 </li>

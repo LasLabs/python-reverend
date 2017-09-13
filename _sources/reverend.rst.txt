@@ -7,7 +7,7 @@ Subpackages
 .. toctree::
 
     reverend.guessers
-    reverend.test
+    reverend.tests
     reverend.ui
 
 Submodules
