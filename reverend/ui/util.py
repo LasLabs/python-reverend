@@ -6,9 +6,9 @@
 
 from Tkinter import *
 
+
 class StatusBar(Frame):
-    """Courtesy of Fredrik Lundh.
-    """
+    """Courtesy of Fredrik Lundh."""
 
     def __init__(self, master):
         Frame.__init__(self, master)
@@ -41,7 +41,8 @@ class Command:
 
     def __call__(self):
         return apply(self.callback, self.args, self.kwargs)
-    
+
+
 class Notebook:
     """Courtesy of Iuri Wickert
     http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/188537
@@ -66,15 +67,14 @@ class Notebook:
         self.rb_fr.pack(side=side, fill=BOTH)
         self.screen_fr = Frame(master, borderwidth=2, relief=RIDGE)
         self.screen_fr.pack(fill=BOTH)
-            
 
-    # return a master frame reference for the external frames (screens)
     def __call__(self):
+        """Return a master frame reference for the external frames (screens).
+        """
         return self.screen_fr
 
-            
-    # add a new frame (screen) to the (bottom/left of the) notebook
     def add_screen(self, fr, title):
+        """Add a new frame (screen) to the (bottom/left of the) notebook."""
         b = Radiobutton(self.rb_fr, text=title, indicatoron=0, \
             variable=self.choice, value=self.count, \
             command=lambda: self.display(fr))
@@ -87,12 +87,10 @@ class Notebook:
             self.active_fr = fr
 
         self.count += 1
-            
-            
-    # hides the former active frame and shows 
-    # another one, keeping its reference
+
     def display(self, fr):
+        """Hides the former active frame and shows another, keeps reference.
+        """
         self.active_fr.forget()
         fr.pack(fill=BOTH, expand=1)
         self.active_fr = fr
-

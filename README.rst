@@ -46,7 +46,7 @@ The two ways to extend it are:
    The function should return a list of strings, which
    are the tokens that are relevant to your app.
 
-2. Subclass Bayes and override the method getTokens to
+2. Subclass Bayes and override the method get_tokens to
    return a list of string tokens relevant to your app.
 
 Known Issues / Road Map

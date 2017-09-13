@@ -49,7 +49,7 @@ def runTrainer():
     root.minsize(width=300, height=300)
     #root.maxsize(width=600, height=600)
     guesser = EmailClassifier()
-    display = Trainer(root, guesser=guesser, itemClass=EmailItem)
+    display = Trainer(root, guesser=guesser, item_class=EmailItem)
     root.mainloop()
 
 def runTester():

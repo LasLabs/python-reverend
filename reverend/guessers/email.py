@@ -11,27 +11,27 @@ from reverend.thomas import Bayes
 
 class EmailClassifier(Bayes):
 
-    def getTokens(self, msg):
+    def get_tokens(self, msg):
         # Overide from parent
         # This should return a list of strings
         # which will be used as the key into
         # the table of token counts
-        tokens = self.getHeaderTokens(msg)
-        tokens += self.getBodyTokens(msg)
+        tokens = self.get_header_tokens(msg)
+        tokens += self.get_body_tokens(msg)
         
         # Get some tokens that are generated from the
         # header and the structure
-        tokens += self.getMetaTokens(msg)
+        tokens += self.get_meta_tokens(msg)
         return tokens
 
-    def getBodyTokens(self, msg):
-        text = self.getTextPlain(msg)
+    def get_body_tokens(self, msg):
+        text = self.get_text_plain(msg)
         if text is None:
             text =  ''
         tl = list(self._tokenizer.tokenize(text))
         return tl
 
-    def getHeaderTokens(self, msg):
+    def get_header_tokens(self, msg):
         subj = msg.get('subject','nosubject')
         text =  subj + ' '
         text +=  msg.get('from','fromnoone') + ' '
@@ -40,7 +40,7 @@ class EmailClassifier(Bayes):
         tl = list(self._tokenizer.tokenize(text))
         return tl
           
-    def getTextPlain(self, msg):
+    def get_text_plain(self, msg):
         for part in msg.walk():
             typ = part.get_content_type()
             if typ and typ.lower() == "text/plain":
@@ -48,7 +48,7 @@ class EmailClassifier(Bayes):
                 return text
         return None
 
-    def getTextHtml(self, msg):
+    def get_text_html(self, msg):
         for part in msg.walk():
             typ = part.get_content_type()
             if typ and typ.lower() == "text/html":
@@ -56,14 +56,14 @@ class EmailClassifier(Bayes):
                 return text
         return None
 
-    def getMetaTokens(self, msg):
+    def get_meta_tokens(self, msg):
         r = []
         for f in ['Content-type', 'X-Priority', 'X-Mailer',
                   'content-transfer-encoding', 'X-MSMail-Priority']:
             r.append(f +':' + msg.get(f, 'None'))
 
-        text = self.getTextPlain(msg)
-        html = self.getTextHtml(msg)
+        text = self.get_text_plain(msg)
+        html = self.get_text_html(msg)
             
         for stem, part in zip(['text','html'],[text,html]):
             if part is None:
@@ -101,4 +101,3 @@ class EmailClassifier(Bayes):
             r.append('cc_more_than_10')
                 
         return r
-    

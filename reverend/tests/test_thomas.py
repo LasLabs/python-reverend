@@ -12,7 +12,8 @@ class BayesTests(TestCase):
     """
     Tests for L{Bayes}.
     """
-    def test_untrainedGuess(self):
+
+    def test_untrained_guess(self):
         """
         The C{guess} method of a L{Bayes} instance with no training data returns
         an empty list.

@@ -12,57 +12,56 @@ import tkMessageBox
 import os
 import time
 
+
 class TestView(Frame):
+
     def __init__(self, parent=None, guesser=None, app=None):
         Frame.__init__(self, parent)
         self.pack()
         self.guesser = guesser
         self.app = app
         self.size = 300
-        self.setupViews()
-        
+        self.setup_views()
 
-    def setupViews(self):
+    def setup_views(self):
         line = Frame(self, relief=RAISED, borderwidth=1)
         line.pack(side=TOP, padx=2, pady=1)
-        colHeadings = [('Guesses', 8), ('Right', 8), ('Wrong', 8), ('Accuracy %', 10)]
-        currCol = 0
-        for cHdr, width in colHeadings:
-            l = Label(line, text=cHdr, width=width, bg='lightblue')
-            l.grid(row=0, column=currCol)
-            currCol += 1
+        col_headings = [('Guesses', 8), ('Right', 8), ('Wrong', 8), ('Accuracy %', 10)]
+        curr_col = 0
+        for text, width in col_headings:
+            l = Label(line, text=text, width=width, bg='lightblue')
+            l.grid(row=0, column=curr_col)
+            curr_col += 1
         line = Frame(self)
         line.pack(fill=X)
 
-        iGuess = IntVar()
-        iRight = IntVar()
-        iWrong = IntVar()
-        iAcc = IntVar()
-        self.model = (iGuess, iRight, iWrong, iAcc)
+        i_guess = IntVar()
+        i_right = IntVar()
+        i_wrong = IntVar()
+        i_acc = IntVar()
+        self.model = (i_guess, i_right, i_wrong, i_acc)
 
-        l = Label(line, textvariable=iGuess, anchor=E, width=8, relief=SUNKEN)
+        l = Label(line, textvariable=i_guess, anchor=E, width=8, relief=SUNKEN)
         l.grid(row=0, column=0)
-        l = Label(line, textvariable=iRight, anchor=E, width=8, relief=SUNKEN)
+        l = Label(line, textvariable=i_right, anchor=E, width=8, relief=SUNKEN)
         l.grid(row=0, column=1) 
-        l = Label(line, textvariable=iWrong, anchor=E, width=8, relief=SUNKEN)
+        l = Label(line, textvariable=i_wrong, anchor=E, width=8, relief=SUNKEN)
         l.grid(row=0, column=2)   
-        l = Label(line, textvariable=iAcc, anchor=E, width=8, relief=SUNKEN)
+        l = Label(line, textvariable=i_acc, anchor=E, width=8, relief=SUNKEN)
         l.grid(row=0, column=3)   
-        bp = Button(self, text="Run Test", command=self.runTest)
+        bp = Button(self, text="Run Test", command=self.run_test)
         bp.pack(side=BOTTOM)
 
         canvas = Canvas(self, width=self.size, height=self.size, bg='lightyellow')
         canvas.pack(expand=YES, fill=BOTH, side=BOTTOM)
         self.canvas = canvas
         
-##        slid = Scale(self, label='Wrong', variable=iWrong, to=400, orient=HORIZONTAL, bg='red')
-##        slid.pack(side=BOTTOM)
-##        slid = Scale(self, label='Right', variable=iRight, to=400, orient=HORIZONTAL, bg='green')
-##        slid.pack(side=BOTTOM)
+#       slid = Scale(self, label='Wrong', variable=iWrong, to=400, orient=HORIZONTAL, bg='red')
+#       slid.pack(side=BOTTOM)
+#       slid = Scale(self, label='Right', variable=iRight, to=400, orient=HORIZONTAL, bg='green')
+#       slid.pack(side=BOTTOM)
 
-    
-    def runTest(self):
-        # TODO - This is nasty re-write
+    def run_test(self):
         if len(self.guesser) == 0:
             tkMessageBox.showwarning('Underprepared for examination!',
                                      'Your guesser has had no training. Please train and retry.')
@@ -79,30 +78,30 @@ class TestView(Frame):
             return
         
         de = DirectoryExam(path, answer, self.app.itemClass)
-        testCount = len(de)
-        scale = self.calcScale(testCount)
+        test_count = len(de)
+        scale = self.calc_scale(test_count)
         x = 0
         y = 0
-        cumTime = 0
-        iGuess, iRight, iWrong, iAcc = self.model
+        cum_time = 0
+        i_guess, i_right, i_wrong, i_acc = self.model
         for m, ans in de:
             then = time.time()
             g = self.guesser.guess(m)
-            cumTime += time.time() - then
+            cum_time += time.time() - then
             if g:
                 g = g[0][0]
-                iGuess.set(iGuess.get()+1)
+                i_guess.set(i_guess.get()+1)
                 if g == ans:
                     col = 'green'
-                    iRight.set(iRight.get()+1)
+                    i_right.set(i_right.get()+1)
                 else:
                     col = 'red'
-                    iWrong.set(iWrong.get()+1)
-                iAcc.set(round(100 * iRight.get()/float(iGuess.get()), 3))
+                    i_wrong.set(i_wrong.get()+1)
+                i_acc.set(round(100 * i_right.get()/float(i_guess.get()), 3))
 
             # Plot squares
             self.canvas.create_rectangle(x*scale,y*scale,(x+1)*scale,(y+1)*scale,fill=col)
-            if not divmod(iGuess.get(),(int(self.size/scale)))[1]:
+            if not divmod(i_guess.get(),(int(self.size/scale)))[1]:
                 # wrap
                 x = 0
                 y += 1
@@ -110,16 +109,15 @@ class TestView(Frame):
                 x += 1
                 
             self.update_idletasks()
-        guesses = iGuess.get()
-        self.app.status.log('%r guesses in %.2f seconds. Avg: %.2f/sec.' % (guesses, cumTime,
-                                                                        round(guesses/cumTime, 2)))
+        guesses = i_guess.get()
+        self.app.status.log('%r guesses in %.2f seconds. Avg: %.2f/sec.' % (guesses, cum_time,
+                                                                        round(guesses/cum_time, 2)))
 
-    def calcScale(self, testCount):
+    def calc_scale(self, testCount):
         import math
         scale = int(self.size/(math.sqrt(testCount)+1))
         return scale
-        
-                
+
     
 class DirectoryExam(object):
     """Creates a iterator that returns a pair at a time.
@@ -127,17 +125,17 @@ class DirectoryExam(object):
     a directory and uses the same answer for each.
     """
     
-    def __init__(self, path, answer, itemClass):
+    def __init__(self, path, answer, item_class):
         self.path = path
         self.answer = answer
-        self.itemClass = itemClass
+        self.item_class = item_class
 
     def __iter__(self):
         files = os.listdir(self.path)
-        for file in files:
-            fp = open(os.path.join(self.path, file), 'rb')
+        for file_name in files:
+            fp = open(os.path.join(self.path, file_name), 'rb')
             try:
-                item = self.itemClass.fromFile(fp)
+                item = self.item_class.from_file(fp)
             finally:
                 fp.close()
             if item is None:
@@ -147,6 +145,3 @@ class DirectoryExam(object):
     def __len__(self):
         files = os.listdir(self.path)
         return len(files)
-        
-        
-        
