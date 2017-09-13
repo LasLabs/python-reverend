@@ -14,8 +14,8 @@ virtualenv:
 env:
   global:
     - PROJECT="reverend"
-    - VERSION="0.4.0"
-    - RELEASE="0.4.0"
+    - VERSION="1.0.0"
+    - RELEASE="0.5.0"
     - secure: "pPiYfv2vzfaKiXv73GmyGfjYPSJ3qiIvDbleHUkY2gPYHJ7WY6rZsAZTGXHzXF56s+97GW0kCRsaSVDY4RXcCf0yFMPEe3eqTax2Nbl/okHAMVJ20qGIzoexz4QTfo4WlgkFZuht+zcQaBWAQamKsoX8gQN5N8XezQx1moMKW4KMGl7EBX9K23Z8J9OxnX10W2ciXod7VkGj/By2bAntlTmO9LcQoFKciMdt92DEHRAHmkmuNnx6f7TAkpKC6WCELbqATrR2vPNlbV1fgbV2hemjbLl6QfiVgty8oEqtV/ASQHfR7eA7pwnlLybLc9Jau94dflhl9U4x58kTRdjQsR0qVkjMRoCuAEF1HtxR7el5/T19EsKNheur7EjSDApLqNJXV5ziFuwCSFy2bmg2GRJcaMy3ueN7Dhu/hkCwvJAAEi1lrkqk+zSbvswElb2lNpUWOpDc+Z59gMpemrrZg+WhcC12A/e0VrT5vkCQJw5F6OioXfCnhFcV8bBkPVQVVZKP/M2BIFGFuzBcJs+N5cIeDNX5SbibHMd0ubrT/I17y1vvpBM+qEDoQHOvTdCrtZD6eVfdkzy7fGC67ZmF0jWuUalZXNnKSQ5C9go7hHgWyO+URed4D0BbLrkBUwXSW6Vs6V1UKysJcU0z6ugkYYbrO8wvqqdqgwEUwhZaXtw="
   matrix:
     - TESTS="1"

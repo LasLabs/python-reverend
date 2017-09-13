@@ -4,9 +4,10 @@
 # License as published by the Free Software Foundation.
 #
 
-import operator
-import re
 import math
+import operator
+import pickle
+import re
 
 try:
     set
@@ -58,9 +59,7 @@ class Bayes(object):
         self.save()
 
     def newPool(self, poolName):
-        """Create a new pool, without actually doing any
-        training.
-        """
+        """Create a new pool, without actually doing any training."""
         self.dirty = True # not always true, but it's simple
         return self.pools.setdefault(poolName, self.dataClass(poolName))
 
@@ -76,6 +75,7 @@ class Bayes(object):
 
     def mergePools(self, destPool, sourcePool):
         """Merge an existing pool into another.
+
         The data from sourcePool is merged into destPool.
         The arguments are the names of the pools to be merged.
         The pool named sourcePool is left in tact and you may
@@ -92,31 +92,52 @@ class Bayes(object):
         self.dirty = True
 
     def poolData(self, poolName):
-        """Return a list of the (token, count) tuples.
-        """
+        """Return a list of the (token, count) tuples."""
         return self.pools[poolName].items()
 
     def poolTokens(self, poolName):
-        """Return a list of the tokens in this pool.
-        """
+        """Return a list of the tokens in this pool."""
         return [tok for tok, count in self.poolData(poolName)]
 
-    def save(self, fname='bayesdata.dat'):
-        from cPickle import dump
-        fp = open(fname, 'wb')
-        dump(self.pools, fp)
-        fp.close()
+    def save(self, file_path='bayesdata.dat'):
+        """Save the trained model to the appropriate path.
 
-    def load(self, fname='bayesdata.dat'):
-        from cPickle import load
-        fp = open(fname, 'rb')
-        self.pools = load(fp)
-        fp.close()
+        Args:
+            file_path (str): Path of database file.
+        """
+        with open(file_path, 'wb') as fp:
+            self.save_pointer(fp)
+
+    def save_handler(self, file_handler):
+        """Save the trained model to the open file handler.
+
+        Args:
+            file_handler (file): Open file pointer, or file-like object.
+        """
+        pickle.dump(self.pools, file_handler)
+
+    def load(self, file_path='bayesdata.dat'):
+        """Load trained model data from a file path.
+
+        Args:
+            file_path (str): Path of database file.
+        """
+        with open(file_path, 'rb') as fp:
+            self.load_handler(fp)
+
+    def load_handler(self, file_handler):
+        """Load trained model data from an open file handler.
+
+        Args:
+            file_handler (file): Open file pointer, or file-like object.
+        """
+        self.pools = pickle.load(file_handler)
         self.corpus = self.pools['__Corpus__']
         self.dirty = True
 
     def poolNames(self):
         """Return a sorted list of Pool names.
+
         Does not include the system pool '__Corpus__'.
         """
         pools = self.pools.keys()
