@@ -1,4 +1,4 @@
-|License MIT| | |Build Status| | |Coveralls Status| | |Codecov Status| | |Code Climate|
+|License MIT| | |Build Status| | |Test Coverage| | |Code Climate|
 
 ========
 Reverend
@@ -77,9 +77,7 @@ which is no longer maintained.
 
 .. |Build Status| image:: https://api.travis-ci.org/LasLabs/python-reverend.svg?branch=master
    :target: https://travis-ci.org/LasLabs/python-reverend
-.. |Coveralls Status| image:: https://coveralls.io/repos/LasLabs/python-reverend/badge.svg?branch=master
-   :target: https://coveralls.io/r/LasLabs/python-reverend?branch=master
-.. |Codecov Status| image:: https://codecov.io/gh/LasLabs/python-reverend/branch/master/graph/badge.svg
+.. |Test Coverage| image:: https://codecov.io/gh/LasLabs/python-reverend/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/LasLabs/python-reverend
 .. |Code Climate| image:: https://codeclimate.com/github/LasLabs/python-reverend/badges/gpa.svg
    :target: https://codeclimate.com/github/LasLabs/python-reverend
