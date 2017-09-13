@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>reverend package &#8212; reverend 0.4.0b11 documentation</title>
+    <title>reverend package &#8212; reverend 0.5.0b24 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.4.0b11',
+        VERSION:     '0.5.0b24',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -117,14 +117,37 @@ instance creation.</p>
 
 <dl class="method">
 <dt id="reverend.thomas.Bayes.load">
-<code class="descname">load</code><span class="sig-paren">(</span><em>fname='bayesdata.dat'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.load" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">load</code><span class="sig-paren">(</span><em>file_path='bayesdata.dat'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load trained model data from a file path.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_path</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – Path of database file.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.load_handler">
+<code class="descname">load_handler</code><span class="sig-paren">(</span><em>file_handler</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.load_handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.load_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load trained model data from an open file handler.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_handler</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#file" title="(in Python v2.7)"><em>file</em></a>) – Open file pointer, or file-like object.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="reverend.thomas.Bayes.mergePools">
 <code class="descname">mergePools</code><span class="sig-paren">(</span><em>destPool</em>, <em>sourcePool</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.mergePools"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.mergePools" title="Permalink to this definition">¶</a></dt>
-<dd><p>Merge an existing pool into another.
-The data from sourcePool is merged into destPool.
+<dd><p>Merge an existing pool into another.</p>
+<p>The data from sourcePool is merged into destPool.
 The arguments are the names of the pools to be merged.
 The pool named sourcePool is left in tact and you may
 want to call removePool() to get rid of it.</p>
@@ -133,8 +156,7 @@ want to call removePool() to get rid of it.</p>
 <dl class="method">
 <dt id="reverend.thomas.Bayes.newPool">
 <code class="descname">newPool</code><span class="sig-paren">(</span><em>poolName</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.newPool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.newPool" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a new pool, without actually doing any
-training.</p>
+<dd><p>Create a new pool, without actually doing any training.</p>
 </dd></dl>
 
 <dl class="method">
@@ -146,8 +168,8 @@ training.</p>
 <dl class="method">
 <dt id="reverend.thomas.Bayes.poolNames">
 <code class="descname">poolNames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.poolNames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.poolNames" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a sorted list of Pool names.
-Does not include the system pool ‘__Corpus__’.</p>
+<dd><p>Return a sorted list of Pool names.</p>
+<p>Does not include the system pool ‘__Corpus__’.</p>
 </dd></dl>
 
 <dl class="method">
@@ -193,8 +215,31 @@ Courtesy of <a class="reference external" href="http://christophe.delord.free.fr
 
 <dl class="method">
 <dt id="reverend.thomas.Bayes.save">
-<code class="descname">save</code><span class="sig-paren">(</span><em>fname='bayesdata.dat'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.save" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">save</code><span class="sig-paren">(</span><em>file_path='bayesdata.dat'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the trained model to the appropriate path.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_path</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – Path of database file.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.save_handler">
+<code class="descname">save_handler</code><span class="sig-paren">(</span><em>file_handler</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.save_handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.save_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the trained model to the open file handler.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_handler</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#file" title="(in Python v2.7)"><em>file</em></a>) – Open file pointer, or file-like object.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="reverend.thomas.Bayes.train">
