@@ -1,0 +1,441 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>reverend.thomas &#8212; reverend 0.4.0b5 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.4.0b5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for reverend.thomas</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This module is part of the Divmod project and is Copyright 2003 Amir Bakhtiar:</span>
+<span class="c1"># amir@divmod.org.  This is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of version 2.1 of the GNU Lesser General Public</span>
+<span class="c1"># License as published by the Free Software Foundation.</span>
+<span class="c1">#</span>
+
+<span class="kn">import</span> <span class="nn">operator</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="nb">set</span>
+<span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
+    <span class="c1"># Fall back to the sets module if there&#39;s no set builtin yet.</span>
+    <span class="kn">from</span> <span class="nn">sets</span> <span class="k">import</span> <span class="n">Set</span> <span class="k">as</span> <span class="nb">set</span>
+
+
+<div class="viewcode-block" id="BayesData"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.BayesData">[docs]</a><span class="k">class</span> <span class="nc">BayesData</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">pool</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">training</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pool</span> <span class="o">=</span> <span class="n">pool</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tokenCount</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trainCount</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="BayesData.trainedOn"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.BayesData.trainedOn">[docs]</a>    <span class="k">def</span> <span class="nf">trainedOn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&lt;BayesDict: </span><span class="si">%s</span><span class="s1">, </span><span class="si">%s</span><span class="s1"> tokens&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenCount</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Bayes"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes">[docs]</a><span class="k">class</span> <span class="nc">Bayes</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">combiner</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataClass</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">dataClass</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dataClass</span> <span class="o">=</span> <span class="n">BayesData</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dataClass</span> <span class="o">=</span> <span class="n">dataClass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataClass</span><span class="p">(</span><span class="s1">&#39;__Corpus__&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pools</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pools</span><span class="p">[</span><span class="s1">&#39;__Corpus__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trainCount</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># The tokenizer takes an object and returns</span>
+        <span class="c1"># a list of strings</span>
+        <span class="k">if</span> <span class="n">tokenizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tokenizer</span> <span class="o">=</span> <span class="n">Tokenizer</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tokenizer</span> <span class="o">=</span> <span class="n">tokenizer</span>
+        <span class="c1"># The combiner combines probabilities</span>
+        <span class="k">if</span> <span class="n">combiner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">combiner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">robinson</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">combiner</span> <span class="o">=</span> <span class="n">combiner</span>
+
+<div class="viewcode-block" id="Bayes.commit"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.commit">[docs]</a>    <span class="k">def</span> <span class="nf">commit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Bayes.newPool"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.newPool">[docs]</a>    <span class="k">def</span> <span class="nf">newPool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poolName</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a new pool, without actually doing any</span>
+<span class="sd">        training.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># not always true, but it&#39;s simple</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pools</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">poolName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataClass</span><span class="p">(</span><span class="n">poolName</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Bayes.removePool"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.removePool">[docs]</a>    <span class="k">def</span> <span class="nf">removePool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poolName</span><span class="p">):</span>
+        <span class="k">del</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pools</span><span class="p">[</span><span class="n">poolName</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Bayes.renamePool"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.renamePool">[docs]</a>    <span class="k">def</span> <span class="nf">renamePool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poolName</span><span class="p">,</span> <span class="n">newName</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pools</span><span class="p">[</span><span class="n">newName</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pools</span><span class="p">[</span><span class="n">poolName</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pools</span><span class="p">[</span><span class="n">newName</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">newName</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">removePool</span><span class="p">(</span><span class="n">poolName</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Bayes.mergePools"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.mergePools">[docs]</a>    <span class="k">def</span> <span class="nf">mergePools</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">destPool</span><span class="p">,</span> <span class="n">sourcePool</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Merge an existing pool into another.</span>
+<span class="sd">        The data from sourcePool is merged into destPool.</span>
+<span class="sd">        The arguments are the names of the pools to be merged.</span>
+<span class="sd">        The pool named sourcePool is left in tact and you may</span>
+<span class="sd">        want to call removePool() to get rid of it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pools</span><span class="p">[</span><span class="n">sourcePool</span><span class="p">]</span>
+        <span class="n">dp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pools</span><span class="p">[</span><span class="n">destPool</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">tok</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">sp</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">dp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tok</span><span class="p">):</span>
+                <span class="n">dp</span><span class="p">[</span><span class="n">tok</span><span class="p">]</span> <span class="o">+=</span> <span class="n">count</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dp</span><span class="p">[</span><span class="n">tok</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+                <span class="n">dp</span><span class="o">.</span><span class="n">tokenCount</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Bayes.poolData"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.poolData">[docs]</a>    <span class="k">def</span> <span class="nf">poolData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poolName</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a list of the (token, count) tuples.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pools</span><span class="p">[</span><span class="n">poolName</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Bayes.poolTokens"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.poolTokens">[docs]</a>    <span class="k">def</span> <span class="nf">poolTokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poolName</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a list of the tokens in this pool.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">tok</span> <span class="k">for</span> <span class="n">tok</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">poolData</span><span class="p">(</span><span class="n">poolName</span><span class="p">)]</span></div>
+
+<div class="viewcode-block" id="Bayes.save"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="o">=</span><span class="s1">&#39;bayesdata.dat&#39;</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">cPickle</span> <span class="k">import</span> <span class="n">dump</span>
+        <span class="n">fp</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+        <span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pools</span><span class="p">,</span> <span class="n">fp</span><span class="p">)</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Bayes.load"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="o">=</span><span class="s1">&#39;bayesdata.dat&#39;</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">cPickle</span> <span class="k">import</span> <span class="n">load</span>
+        <span class="n">fp</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pools</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pools</span><span class="p">[</span><span class="s1">&#39;__Corpus__&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Bayes.poolNames"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.poolNames">[docs]</a>    <span class="k">def</span> <span class="nf">poolNames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a sorted list of Pool names.</span>
+<span class="sd">        Does not include the system pool &#39;__Corpus__&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pools</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pools</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">pools</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;__Corpus__&#39;</span><span class="p">)</span>
+        <span class="n">pools</span> <span class="o">=</span> <span class="p">[</span><span class="n">pool</span> <span class="k">for</span> <span class="n">pool</span> <span class="ow">in</span> <span class="n">pools</span><span class="p">]</span>
+        <span class="n">pools</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">pools</span></div>
+
+<div class="viewcode-block" id="Bayes.buildCache"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.buildCache">[docs]</a>    <span class="k">def</span> <span class="nf">buildCache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; merges corpora and computes probabilities</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">pname</span><span class="p">,</span> <span class="n">pool</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pools</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># skip our special pool</span>
+            <span class="k">if</span> <span class="n">pname</span> <span class="o">==</span> <span class="s1">&#39;__Corpus__&#39;</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">poolCount</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">tokenCount</span>
+            <span class="n">themCount</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">tokenCount</span> <span class="o">-</span> <span class="n">poolCount</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">cacheDict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">pname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataClass</span><span class="p">(</span><span class="n">pname</span><span class="p">))</span>
+
+            <span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">totCount</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="c1"># for every word in the copus</span>
+                <span class="c1"># check to see if this pool contains this word</span>
+                <span class="n">thisCount</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pool</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">thisCount</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">):</span>
+                        <span class="k">continue</span>
+                <span class="n">otherCount</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">totCount</span><span class="p">)</span> <span class="o">-</span> <span class="n">thisCount</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">poolCount</span><span class="p">:</span>
+                    <span class="n">goodMetric</span> <span class="o">=</span> <span class="mf">1.0</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">goodMetric</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">otherCount</span><span class="o">/</span><span class="n">poolCount</span><span class="p">)</span>
+                <span class="n">badMetric</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">thisCount</span><span class="o">/</span><span class="n">themCount</span><span class="p">)</span>
+                <span class="n">f</span> <span class="o">=</span> <span class="n">badMetric</span> <span class="o">/</span> <span class="p">(</span><span class="n">goodMetric</span> <span class="o">+</span> <span class="n">badMetric</span><span class="p">)</span>
+
+                <span class="c1"># PROBABILITY_THRESHOLD</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">f</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.1</span> <span class="p">:</span>
+                    <span class="c1"># GOOD_PROB, BAD_PROB</span>
+                    <span class="n">cacheDict</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mf">0.9999</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Bayes.poolProbs"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.poolProbs">[docs]</a>    <span class="k">def</span> <span class="nf">poolProbs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirty</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buildCache</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dirty</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span></div>
+
+<div class="viewcode-block" id="Bayes.getTokens"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.getTokens">[docs]</a>    <span class="k">def</span> <span class="nf">getTokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;By default, we expect obj to be a screen and split</span>
+<span class="sd">        it on whitespace.</span>
+
+<span class="sd">        Note that this does not change the case.</span>
+<span class="sd">        In some applications you may want to lowecase everthing</span>
+<span class="sd">        so that &quot;king&quot; and &quot;King&quot; generate the same token.</span>
+
+<span class="sd">        Override this in your subclass for objects other</span>
+<span class="sd">        than text.</span>
+
+<span class="sd">        Alternatively, you can pass in a tokenizer as part of</span>
+<span class="sd">        instance creation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Bayes.getProbs"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.getProbs">[docs]</a>    <span class="k">def</span> <span class="nf">getProbs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="n">words</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; extracts the probabilities of tokens in a message</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">probs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">word</span><span class="p">,</span> <span class="n">pool</span><span class="p">[</span><span class="n">word</span><span class="p">])</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span> <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">pool</span><span class="p">]</span>
+        <span class="n">probs</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="nb">cmp</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">probs</span><span class="p">[:</span><span class="mi">2048</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Bayes.train"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">uid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Train Bayes by telling him that item belongs</span>
+<span class="sd">        in pool. uid is optional and may be used to uniquely</span>
+<span class="sd">        identify the item that is being trained on.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTokens</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="n">pool</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pools</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataClass</span><span class="p">(</span><span class="n">pool</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_train</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="n">tokens</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">trainCount</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">pool</span><span class="o">.</span><span class="n">trainCount</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">uid</span><span class="p">:</span>
+            <span class="n">pool</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Bayes.untrain"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.untrain">[docs]</a>    <span class="k">def</span> <span class="nf">untrain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">uid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTokens</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="n">pool</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pools</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">pool</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_untrain</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="n">tokens</span><span class="p">)</span>
+        <span class="c1"># I guess we want to count this as additional training?</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">trainCount</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">pool</span><span class="o">.</span><span class="n">trainCount</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">uid</span><span class="p">:</span>
+            <span class="n">pool</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+    <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="n">tokens</span><span class="p">):</span>
+        <span class="n">wc</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">pool</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span>  <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span>  <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">wc</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">pool</span><span class="o">.</span><span class="n">tokenCount</span> <span class="o">+=</span> <span class="n">wc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">tokenCount</span> <span class="o">+=</span> <span class="n">wc</span>
+
+    <span class="k">def</span> <span class="nf">_untrain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="n">tokens</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">count</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">del</span><span class="p">(</span><span class="n">pool</span><span class="p">[</span><span class="n">token</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">pool</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span>  <span class="n">count</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">pool</span><span class="o">.</span><span class="n">tokenCount</span> <span class="o">-=</span> <span class="mi">1</span>
+
+            <span class="n">count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">count</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">del</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="n">token</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span>  <span class="n">count</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">tokenCount</span> <span class="o">-=</span> <span class="mi">1</span>
+
+<div class="viewcode-block" id="Bayes.trainedOn"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.trainedOn">[docs]</a>    <span class="k">def</span> <span class="nf">trainedOn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Bayes.guess"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.guess">[docs]</a>    <span class="k">def</span> <span class="nf">guess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getTokens</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
+        <span class="n">pools</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">poolProbs</span><span class="p">()</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">pname</span><span class="p">,</span> <span class="n">pprobs</span> <span class="ow">in</span> <span class="n">pools</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getProbs</span><span class="p">(</span><span class="n">pprobs</span><span class="p">,</span> <span class="n">tokens</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">res</span><span class="p">[</span><span class="n">pname</span><span class="p">]</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">combiner</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pname</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="nb">cmp</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="Bayes.robinson"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.robinson">[docs]</a>    <span class="k">def</span> <span class="nf">robinson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">probs</span><span class="p">,</span> <span class="n">ignore</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; computes the probability of a message being spam (Robinson&#39;s method)</span>
+<span class="sd">            P = 1 - prod(1-p)^(1/n)</span>
+<span class="sd">            Q = 1 - prod(p)^(1/n)</span>
+<span class="sd">            S = (1 + (P-Q)/(P+Q)) / 2</span>
+<span class="sd">            Courtesy of http://christophe.delord.free.fr/en/index.html</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">nth</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">probs</span><span class="p">)</span>
+        <span class="n">P</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">reduce</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">mul</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="mf">1.0</span><span class="o">-</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">probs</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">**</span> <span class="n">nth</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">reduce</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">mul</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">probs</span><span class="p">))</span> <span class="o">**</span> <span class="n">nth</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="p">(</span><span class="n">P</span> <span class="o">-</span> <span class="n">Q</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">P</span> <span class="o">+</span> <span class="n">Q</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">S</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span></div>
+
+
+<div class="viewcode-block" id="Bayes.robinsonFisher"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.robinsonFisher">[docs]</a>    <span class="k">def</span> <span class="nf">robinsonFisher</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">probs</span><span class="p">,</span> <span class="n">ignore</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; computes the probability of a message being spam (Robinson-Fisher method)</span>
+<span class="sd">            H = C-1( -2.ln(prod(p)), 2*n )</span>
+<span class="sd">            S = C-1( -2.ln(prod(1-p)), 2*n )</span>
+<span class="sd">            I = (1 + H - S) / 2</span>
+<span class="sd">            Courtesy of http://christophe.delord.free.fr/en/index.html</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">probs</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span> <span class="n">H</span> <span class="o">=</span> <span class="n">chi2P</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">reduce</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">mul</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">probs</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">)),</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OverflowError</span><span class="p">:</span> <span class="n">H</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">try</span><span class="p">:</span> <span class="n">S</span> <span class="o">=</span> <span class="n">chi2P</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">reduce</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">mul</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="mf">1.0</span><span class="o">-</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">probs</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">)),</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OverflowError</span><span class="p">:</span> <span class="n">S</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">H</span> <span class="o">-</span> <span class="n">S</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&lt;Bayes: </span><span class="si">%s</span><span class="s1">&gt;&#39;</span> <span class="o">%</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pools</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">poolNames</span><span class="p">()]</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Tokenizer"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Tokenizer">[docs]</a><span class="k">class</span> <span class="nc">Tokenizer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A simple regex-based whitespace tokenizer.</span>
+<span class="sd">    It expects a string and can return all tokens lower-cased</span>
+<span class="sd">    or in their existing case.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">WORD_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">w+&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">U</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">=</span> <span class="n">lower</span>
+
+<div class="viewcode-block" id="Tokenizer.tokenize"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Tokenizer.tokenize">[docs]</a>    <span class="k">def</span> <span class="nf">tokenize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">WORD_RE</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">()</span></div></div>
+
+<div class="viewcode-block" id="chi2P"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.chi2P">[docs]</a><span class="k">def</span> <span class="nf">chi2P</span><span class="p">(</span><span class="n">chi</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; return P(chisq &gt;= chi, with df degree of freedom)</span>
+
+<span class="sd">    df must be even</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">df</span> <span class="o">&amp;</span> <span class="mi">1</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">chi</span> <span class="o">/</span> <span class="mf">2.0</span>
+    <span class="nb">sum</span> <span class="o">=</span> <span class="n">term</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">m</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">df</span><span class="o">/</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">term</span> <span class="o">*=</span> <span class="n">m</span><span class="o">/</span><span class="n">i</span>
+        <span class="nb">sum</span> <span class="o">+=</span> <span class="n">term</span>
+    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="nb">sum</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">reverend</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=LasLabs&repo=python-reverend&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+    
+
+<p>
+<a href="https://travis-ci.org/LasLabs/python-reverend">
+    <img
+        alt="https://secure.travis-ci.org/LasLabs/python-reverend.svg?branch=master"
+        src="https://secure.travis-ci.org/LasLabs/python-reverend.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reverend.html">reverend package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../setup.html">setup module</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017 LasLabs Inc..
+      
+    </div>
+
+    
+    <a href="https://github.com/LasLabs/python-reverend" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

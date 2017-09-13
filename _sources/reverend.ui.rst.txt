@@ -1,0 +1,38 @@
+reverend\.ui package
+====================
+
+Submodules
+----------
+
+reverend\.ui\.tester module
+---------------------------
+
+.. automodule:: reverend.ui.tester
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+reverend\.ui\.trainer module
+----------------------------
+
+.. automodule:: reverend.ui.trainer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+reverend\.ui\.util module
+-------------------------
+
+.. automodule:: reverend.ui.util
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: reverend.ui
+    :members:
+    :undoc-members:
+    :show-inheritance:

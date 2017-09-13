@@ -1,0 +1,30 @@
+reverend\.test package
+======================
+
+Submodules
+----------
+
+reverend\.test\.test\_email module
+----------------------------------
+
+.. automodule:: reverend.test.test_email
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+reverend\.test\.test\_thomas module
+-----------------------------------
+
+.. automodule:: reverend.test.test_thomas
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: reverend.test
+    :members:
+    :undoc-members:
+    :show-inheritance:

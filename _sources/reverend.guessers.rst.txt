@@ -1,0 +1,22 @@
+reverend\.guessers package
+==========================
+
+Submodules
+----------
+
+reverend\.guessers\.email module
+--------------------------------
+
+.. automodule:: reverend.guessers.email
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: reverend.guessers
+    :members:
+    :undoc-members:
+    :show-inheritance:

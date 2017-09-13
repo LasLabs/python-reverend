@@ -1,0 +1,344 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>reverend package &#8212; reverend 0.4.0b5 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.4.0b5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="reverend.guessers package" href="reverend.guessers.html" />
+    <link rel="prev" title="Welcome to python-reverend’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="reverend-package">
+<h1>reverend package<a class="headerlink" href="#reverend-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="reverend.guessers.html">reverend.guessers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reverend.guessers.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reverend.guessers.html#module-reverend.guessers.email">reverend.guessers.email module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reverend.guessers.html#module-reverend.guessers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reverend.test.html">reverend.test package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reverend.test.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reverend.test.html#module-reverend.test.test_email">reverend.test.test_email module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reverend.test.html#module-reverend.test.test_thomas">reverend.test.test_thomas module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reverend.test.html#module-reverend.test">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reverend.ui.html">reverend.ui package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reverend.ui.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reverend.ui.html#reverend-ui-tester-module">reverend.ui.tester module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reverend.ui.html#reverend-ui-trainer-module">reverend.ui.trainer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reverend.ui.html#reverend-ui-util-module">reverend.ui.util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reverend.ui.html#module-reverend.ui">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-reverend.thomas">
+<span id="reverend-thomas-module"></span><h2>reverend.thomas module<a class="headerlink" href="#module-reverend.thomas" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="reverend.thomas.Bayes">
+<em class="property">class </em><code class="descclassname">reverend.thomas.</code><code class="descname">Bayes</code><span class="sig-paren">(</span><em>tokenizer=None</em>, <em>combiner=None</em>, <em>dataClass=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="reverend.thomas.Bayes.buildCache">
+<code class="descname">buildCache</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.buildCache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.buildCache" title="Permalink to this definition">¶</a></dt>
+<dd><p>merges corpora and computes probabilities</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.commit">
+<code class="descname">commit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.commit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.commit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.getProbs">
+<code class="descname">getProbs</code><span class="sig-paren">(</span><em>pool</em>, <em>words</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.getProbs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.getProbs" title="Permalink to this definition">¶</a></dt>
+<dd><p>extracts the probabilities of tokens in a message</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.getTokens">
+<code class="descname">getTokens</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.getTokens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.getTokens" title="Permalink to this definition">¶</a></dt>
+<dd><p>By default, we expect obj to be a screen and split
+it on whitespace.</p>
+<p>Note that this does not change the case.
+In some applications you may want to lowecase everthing
+so that “king” and “King” generate the same token.</p>
+<p>Override this in your subclass for objects other
+than text.</p>
+<p>Alternatively, you can pass in a tokenizer as part of
+instance creation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.guess">
+<code class="descname">guess</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.guess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.guess" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.load">
+<code class="descname">load</code><span class="sig-paren">(</span><em>fname='bayesdata.dat'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.mergePools">
+<code class="descname">mergePools</code><span class="sig-paren">(</span><em>destPool</em>, <em>sourcePool</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.mergePools"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.mergePools" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge an existing pool into another.
+The data from sourcePool is merged into destPool.
+The arguments are the names of the pools to be merged.
+The pool named sourcePool is left in tact and you may
+want to call removePool() to get rid of it.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.newPool">
+<code class="descname">newPool</code><span class="sig-paren">(</span><em>poolName</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.newPool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.newPool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new pool, without actually doing any
+training.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.poolData">
+<code class="descname">poolData</code><span class="sig-paren">(</span><em>poolName</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.poolData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.poolData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of the (token, count) tuples.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.poolNames">
+<code class="descname">poolNames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.poolNames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.poolNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a sorted list of Pool names.
+Does not include the system pool ‘__Corpus__’.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.poolProbs">
+<code class="descname">poolProbs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.poolProbs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.poolProbs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.poolTokens">
+<code class="descname">poolTokens</code><span class="sig-paren">(</span><em>poolName</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.poolTokens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.poolTokens" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of the tokens in this pool.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.removePool">
+<code class="descname">removePool</code><span class="sig-paren">(</span><em>poolName</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.removePool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.removePool" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.renamePool">
+<code class="descname">renamePool</code><span class="sig-paren">(</span><em>poolName</em>, <em>newName</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.renamePool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.renamePool" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.robinson">
+<code class="descname">robinson</code><span class="sig-paren">(</span><em>probs</em>, <em>ignore</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.robinson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.robinson" title="Permalink to this definition">¶</a></dt>
+<dd><p>computes the probability of a message being spam (Robinson’s method)
+P = 1 - prod(1-p)^(1/n)
+Q = 1 - prod(p)^(1/n)
+S = (1 + (P-Q)/(P+Q)) / 2
+Courtesy of <a class="reference external" href="http://christophe.delord.free.fr/en/index.html">http://christophe.delord.free.fr/en/index.html</a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.robinsonFisher">
+<code class="descname">robinsonFisher</code><span class="sig-paren">(</span><em>probs</em>, <em>ignore</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.robinsonFisher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.robinsonFisher" title="Permalink to this definition">¶</a></dt>
+<dd><p>computes the probability of a message being spam (Robinson-Fisher method)
+H = C-1( -2.ln(prod(p)), 2*n )
+S = C-1( -2.ln(prod(1-p)), 2*n )
+I = (1 + H - S) / 2
+Courtesy of <a class="reference external" href="http://christophe.delord.free.fr/en/index.html">http://christophe.delord.free.fr/en/index.html</a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>fname='bayesdata.dat'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.train">
+<code class="descname">train</code><span class="sig-paren">(</span><em>pool</em>, <em>item</em>, <em>uid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train Bayes by telling him that item belongs
+in pool. uid is optional and may be used to uniquely
+identify the item that is being trained on.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.trainedOn">
+<code class="descname">trainedOn</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.trainedOn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.trainedOn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Bayes.untrain">
+<code class="descname">untrain</code><span class="sig-paren">(</span><em>pool</em>, <em>item</em>, <em>uid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.untrain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.untrain" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="reverend.thomas.BayesData">
+<em class="property">class </em><code class="descclassname">reverend.thomas.</code><code class="descname">BayesData</code><span class="sig-paren">(</span><em>name=''</em>, <em>pool=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#BayesData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.BayesData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">dict</span></code></a></p>
+<dl class="method">
+<dt id="reverend.thomas.BayesData.trainedOn">
+<code class="descname">trainedOn</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#BayesData.trainedOn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.BayesData.trainedOn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="reverend.thomas.Tokenizer">
+<em class="property">class </em><code class="descclassname">reverend.thomas.</code><code class="descname">Tokenizer</code><span class="sig-paren">(</span><em>lower=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Tokenizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Tokenizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>A simple regex-based whitespace tokenizer.
+It expects a string and can return all tokens lower-cased
+or in their existing case.</p>
+<dl class="attribute">
+<dt id="reverend.thomas.Tokenizer.WORD_RE">
+<code class="descname">WORD_RE</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#reverend.thomas.Tokenizer.WORD_RE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="reverend.thomas.Tokenizer.tokenize">
+<code class="descname">tokenize</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Tokenizer.tokenize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Tokenizer.tokenize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="reverend.thomas.chi2P">
+<code class="descclassname">reverend.thomas.</code><code class="descname">chi2P</code><span class="sig-paren">(</span><em>chi</em>, <em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#chi2P"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.chi2P" title="Permalink to this definition">¶</a></dt>
+<dd><p>return P(chisq &gt;= chi, with df degree of freedom)</p>
+<p>df must be even</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-reverend">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-reverend" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">reverend</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=LasLabs&repo=python-reverend&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+    
+
+<p>
+<a href="https://travis-ci.org/LasLabs/python-reverend">
+    <img
+        alt="https://secure.travis-ci.org/LasLabs/python-reverend.svg?branch=master"
+        src="https://secure.travis-ci.org/LasLabs/python-reverend.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">reverend package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reverend.guessers.html">reverend.guessers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reverend.test.html">reverend.test package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reverend.ui.html">reverend.ui package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-reverend.thomas">reverend.thomas module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-reverend">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">setup module</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017 LasLabs Inc..
+      
+      |
+      <a href="_sources/reverend.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/LasLabs/python-reverend" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

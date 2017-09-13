@@ -1,0 +1,216 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>reverend.guessers.email &#8212; reverend 0.4.0b5 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.4.0b5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for reverend.guessers.email</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This module is part of the Divmod project and is Copyright 2003 Amir Bakhtiar:</span>
+<span class="c1"># amir@divmod.org.  This is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of version 2.1 of the GNU Lesser General Public</span>
+<span class="c1"># License as published by the Free Software Foundation.</span>
+<span class="c1">#</span>
+        
+<span class="kn">from</span> <span class="nn">rfc822</span> <span class="k">import</span> <span class="n">AddressList</span>
+
+<span class="kn">from</span> <span class="nn">reverend.thomas</span> <span class="k">import</span> <span class="n">Bayes</span>
+
+
+<div class="viewcode-block" id="EmailClassifier"><a class="viewcode-back" href="../../../reverend.guessers.html#reverend.guessers.email.EmailClassifier">[docs]</a><span class="k">class</span> <span class="nc">EmailClassifier</span><span class="p">(</span><span class="n">Bayes</span><span class="p">):</span>
+
+<div class="viewcode-block" id="EmailClassifier.getTokens"><a class="viewcode-back" href="../../../reverend.guessers.html#reverend.guessers.email.EmailClassifier.getTokens">[docs]</a>    <span class="k">def</span> <span class="nf">getTokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="c1"># Overide from parent</span>
+        <span class="c1"># This should return a list of strings</span>
+        <span class="c1"># which will be used as the key into</span>
+        <span class="c1"># the table of token counts</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getHeaderTokens</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">tokens</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getBodyTokens</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        
+        <span class="c1"># Get some tokens that are generated from the</span>
+        <span class="c1"># header and the structure</span>
+        <span class="n">tokens</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getMetaTokens</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tokens</span></div>
+
+<div class="viewcode-block" id="EmailClassifier.getBodyTokens"><a class="viewcode-back" href="../../../reverend.guessers.html#reverend.guessers.email.EmailClassifier.getBodyTokens">[docs]</a>    <span class="k">def</span> <span class="nf">getBodyTokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTextPlain</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">text</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span>  <span class="s1">&#39;&#39;</span>
+        <span class="n">tl</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">tl</span></div>
+
+<div class="viewcode-block" id="EmailClassifier.getHeaderTokens"><a class="viewcode-back" href="../../../reverend.guessers.html#reverend.guessers.email.EmailClassifier.getHeaderTokens">[docs]</a>    <span class="k">def</span> <span class="nf">getHeaderTokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="n">subj</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;subject&#39;</span><span class="p">,</span><span class="s1">&#39;nosubject&#39;</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span>  <span class="n">subj</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+        <span class="n">text</span> <span class="o">+=</span>  <span class="n">msg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;from&#39;</span><span class="p">,</span><span class="s1">&#39;fromnoone&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+        <span class="n">text</span> <span class="o">+=</span>  <span class="n">msg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;to&#39;</span><span class="p">,</span><span class="s1">&#39;tonoone&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+        <span class="n">text</span> <span class="o">+=</span>  <span class="n">msg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cc&#39;</span><span class="p">,</span><span class="s1">&#39;ccnoone&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+        <span class="n">tl</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">tl</span></div>
+          
+<div class="viewcode-block" id="EmailClassifier.getTextPlain"><a class="viewcode-back" href="../../../reverend.guessers.html#reverend.guessers.email.EmailClassifier.getTextPlain">[docs]</a>    <span class="k">def</span> <span class="nf">getTextPlain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">msg</span><span class="o">.</span><span class="n">walk</span><span class="p">():</span>
+            <span class="n">typ</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">get_content_type</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">typ</span> <span class="ow">and</span> <span class="n">typ</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">:</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">get_payload</span><span class="p">(</span><span class="n">decode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">text</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="EmailClassifier.getTextHtml"><a class="viewcode-back" href="../../../reverend.guessers.html#reverend.guessers.email.EmailClassifier.getTextHtml">[docs]</a>    <span class="k">def</span> <span class="nf">getTextHtml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">msg</span><span class="o">.</span><span class="n">walk</span><span class="p">():</span>
+            <span class="n">typ</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">get_content_type</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">typ</span> <span class="ow">and</span> <span class="n">typ</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;text/html&quot;</span><span class="p">:</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">get_payload</span><span class="p">(</span><span class="n">decode</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">text</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="EmailClassifier.getMetaTokens"><a class="viewcode-back" href="../../../reverend.guessers.html#reverend.guessers.email.EmailClassifier.getMetaTokens">[docs]</a>    <span class="k">def</span> <span class="nf">getMetaTokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Content-type&#39;</span><span class="p">,</span> <span class="s1">&#39;X-Priority&#39;</span><span class="p">,</span> <span class="s1">&#39;X-Mailer&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;content-transfer-encoding&#39;</span><span class="p">,</span> <span class="s1">&#39;X-MSMail-Priority&#39;</span><span class="p">]:</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span> <span class="o">+</span><span class="s1">&#39;:&#39;</span> <span class="o">+</span> <span class="n">msg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">))</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTextPlain</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTextHtml</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            
+        <span class="k">for</span> <span class="n">stem</span><span class="p">,</span> <span class="n">part</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="s1">&#39;text&#39;</span><span class="p">,</span><span class="s1">&#39;html&#39;</span><span class="p">],[</span><span class="n">text</span><span class="p">,</span><span class="n">html</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">part</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stem</span> <span class="o">+</span> <span class="s1">&#39;_None&#39;</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stem</span> <span class="o">+</span> <span class="s1">&#39;_True&#39;</span><span class="p">)</span>
+        
+            <span class="n">l</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">l</span> <span class="ow">is</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="s1">&#39;zero&#39;</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stem</span> <span class="o">+</span> <span class="n">a</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">l</span> <span class="o">&gt;</span> <span class="mi">10000</span><span class="p">:</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="s1">&#39;more_than_10000&#39;</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stem</span> <span class="o">+</span> <span class="n">a</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">l</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">:</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="s1">&#39;more_than_1000&#39;</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stem</span> <span class="o">+</span> <span class="n">a</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">l</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="s1">&#39;more_than_100&#39;</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stem</span> <span class="o">+</span> <span class="n">a</span><span class="p">)</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;to&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">at</span> <span class="o">=</span> <span class="n">AddressList</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">addresslist</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cc&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">ac</span> <span class="o">=</span> <span class="n">AddressList</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">addresslist</span>
+        
+        <span class="k">if</span> <span class="n">at</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;to_more_than_5&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">at</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;to_more_than_10&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ac</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;cc_more_than_5&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ac</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;cc_more_than_10&#39;</span><span class="p">)</span>
+                
+        <span class="k">return</span> <span class="n">r</span></div></div>
+    
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">reverend</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=LasLabs&repo=python-reverend&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+    
+
+<p>
+<a href="https://travis-ci.org/LasLabs/python-reverend">
+    <img
+        alt="https://secure.travis-ci.org/LasLabs/python-reverend.svg?branch=master"
+        src="https://secure.travis-ci.org/LasLabs/python-reverend.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../reverend.html">reverend package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">setup module</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017 LasLabs Inc..
+      
+    </div>
+
+    
+    <a href="https://github.com/LasLabs/python-reverend" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

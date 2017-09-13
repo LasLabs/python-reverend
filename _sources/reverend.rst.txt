@@ -1,0 +1,31 @@
+reverend package
+================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    reverend.guessers
+    reverend.test
+    reverend.ui
+
+Submodules
+----------
+
+reverend\.thomas module
+-----------------------
+
+.. automodule:: reverend.thomas
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: reverend
+    :members:
+    :undoc-members:
+    :show-inheritance:
