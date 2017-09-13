@@ -1,4 +1,4 @@
-|License MIT| | |Build Status| | |Test Coverage| | |Code Climate|
+|License LGPL-3| | |Build Status| | |Test Coverage| | |Code Climate|
 
 ========
 Reverend
@@ -81,6 +81,6 @@ which is no longer maintained.
    :target: https://codecov.io/gh/LasLabs/python-reverend
 .. |Code Climate| image:: https://codeclimate.com/github/LasLabs/python-reverend/badges/gpa.svg
    :target: https://codeclimate.com/github/LasLabs/python-reverend
-.. |License MIT| image:: https://img.shields.io/badge/license-MIT-blue.svg
-   :target: https://opensource.org/licenses/MIT
-   :alt: License: MIT
+.. |License LGPL-3| image:: https://img.shields.io/badge/license-LGPL--3-blue.svg
+   :target: https://www.gnu.org/licenses/lgpl
+   :alt: License: LGPL-3
