@@ -7,10 +7,10 @@ Removed split.py.
 5 October 2003
 Release 0.2.4
 Added utility methods for removing, renaming and merging Pools:
-    removePool(), renamePool() and mergePools()
+    remove_pool(), rename_pool() and merge_pools()
 
 Also added utility methdos for inspecting pool data:
-    poolData() and poolTokens()
+    pool_data() and pool_tokens()
     
 All of these methods take pool names as arguments.
 
