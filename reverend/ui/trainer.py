@@ -65,7 +65,7 @@ class PoolView(Frame):
         color_stripe = Label(line, text=' ', width=1, bg=col, anchor=W, relief=GROOVE)
         color_stripe.grid(row=0, column=1)
         train = IntVar()
-        train.set(pool.trainCount)
+        train.set(pool.train_count)
         l = Label(line, textvariable=train, anchor=E, width=10, relief=SUNKEN)
         l.grid(row=0, column=2)
         u_tok = IntVar()
@@ -73,7 +73,7 @@ class PoolView(Frame):
         l = Label(line, textvariable=u_tok, anchor=E, width=12, relief=SUNKEN)
         l.grid(row=0, column=3)
         t_tok = IntVar()
-        t_tok.set(pool.tokenCount)
+        t_tok.set(pool.token_count)
         l = Label(line, textvariable=t_tok, anchor=E, width=10, relief=SUNKEN)
         l.grid(row=0, column=4)
         self.model[name] = (pool, u_tok, t_tok, train)
@@ -81,8 +81,8 @@ class PoolView(Frame):
     def refresh(self):
         for pool, ut, tt, train in self.model.values():
             ut.set(len(pool))
-            tt.set(pool.tokenCount)
-            train.set(pool.trainCount)
+            tt.set(pool.token_count)
+            train.set(pool.train_count)
 
     def save(self):
         path = tkFileDialog.asksaveasfilename()

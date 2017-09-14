@@ -9,12 +9,6 @@ import operator
 import pickle
 import re
 
-try:
-    set
-except NameError:
-    # Fall back to the sets module if there's no set builtin yet.
-    from sets import Set as set
-
 
 class BayesData(dict):
 
@@ -22,19 +16,35 @@ class BayesData(dict):
         self.name = name
         self.training = []
         self.pool = pool
-        self.tokenCount = 0
-        self.trainCount = 0
+        self.token_count = 0
+        self.train_count = 0
 
     def trained_on(self, item):
         return item in self.training
 
     def __repr__(self):
-        return '<BayesDict: %s, %s tokens>' % (self.name, self.tokenCount)
+        return '<BayesDict: %s, %s tokens>' % (self.name, self.token_count)
 
 
 class Bayes(object):
 
-    def __init__(self, tokenizer=None, combiner=None, data_class=None):
+    def __init__(self, tokenizer=None, combiner=None, data_class=None,
+                 training_data=None):
+        """Create a new Bayesian classifier.
+
+        Args:
+            tokenizer (Tokenizer, optional): A tokenizer to split strings for
+            evaluation. The default tokenizer is a simple split by whitespace.
+            combiner (callable, optional): Combiner method that should be used
+            for guessing. Should accept ``self``, ``probs`` and ``pool_name``. 
+            Default is ``self.robinson``.
+            data_class (BayesData, optional): Class to use as data
+            encapsulation.
+            training_data (file or str, optional): File-like object, or a path
+            to a file containing a trained data model (as output by ``save``
+            or ``save_handler``).
+        """
+
         if data_class is None:
             self.DataClass = BayesData
         else:
@@ -43,19 +53,24 @@ class Bayes(object):
         self.pools = {
             '__Corpus__': self.corpus,
         }
-        self.trainCount = 0
+        self.train_count = 0
         self.dirty = True
+
         # The tokenizer takes an object and returns
         # a list of strings
         if tokenizer is None:
-            self._tokenizer = Tokenizer()
+            self.tokenizer = Tokenizer()
         else:
-            self._tokenizer = tokenizer
+            self.tokenizer = tokenizer
+
         # The combiner combines probabilities
         if combiner is None:
             self.combiner = self.robinson
         else:
             self.combiner = combiner
+
+        if training_data is not None:
+            self.load_handler(training_data)
 
     def commit(self):
         self.save()
@@ -90,7 +105,7 @@ class Bayes(object):
                 dp[tok] += count
             else:
                 dp[tok] = count
-                dp.tokenCount += 1
+                dp.token_count += 1
         self.dirty = True
 
     def pool_data(self, pool_name):
@@ -156,8 +171,8 @@ class Bayes(object):
             if pname == '__Corpus__':
                 continue
 
-            poolCount = pool.tokenCount
-            themCount = max(self.corpus.tokenCount - poolCount, 1)
+            poolCount = pool.token_count
+            themCount = max(self.corpus.token_count - poolCount, 1)
             cacheDict = self.cache.setdefault(pname, self.DataClass(pname))
 
             for word, totCount in self.corpus.items():
@@ -199,7 +214,7 @@ class Bayes(object):
         Alternatively, you can pass in a tokenizer as part of
         instance creation.
         """
-        return self._tokenizer.tokenize(obj)
+        return self.tokenizer.tokenize(obj)
 
     def get_probs(self, pool, words):
         """Extracts the probabilities of tokens in a message."""
@@ -216,8 +231,8 @@ class Bayes(object):
         tokens = self.get_tokens(item)
         pool = self.pools.setdefault(pool, self.DataClass(pool))
         self._train(pool, tokens)
-        self.corpus.trainCount += 1
-        pool.trainCount += 1
+        self.corpus.train_count += 1
+        pool.train_count += 1
         if uid:
             pool.training.append(uid)
         self.dirty = True
@@ -229,8 +244,8 @@ class Bayes(object):
             return
         self._untrain(pool, tokens)
         # I guess we want to count this as additional training?
-        self.corpus.trainCount += 1
-        pool.trainCount += 1
+        self.corpus.train_count += 1
+        pool.train_count += 1
         if uid:
             pool.training.remove(uid)
         self.dirty = True
@@ -243,8 +258,8 @@ class Bayes(object):
             count = self.corpus.get(token, 0)
             self.corpus[token] =  count + 1
             wc += 1
-        pool.tokenCount += wc
-        self.corpus.tokenCount += wc
+        pool.token_count += wc
+        self.corpus.token_count += wc
 
     def _untrain(self, pool, tokens):
         for token in tokens:
@@ -254,7 +269,7 @@ class Bayes(object):
                     del(pool[token])
                 else:
                     pool[token] =  count - 1
-                pool.tokenCount -= 1
+                pool.token_count -= 1
 
             count = self.corpus.get(token, 0)
             if count:
@@ -262,7 +277,7 @@ class Bayes(object):
                     del(self.corpus[token])
                 else:
                     self.corpus[token] =  count - 1
-                self.corpus.tokenCount -= 1
+                self.corpus.token_count -= 1
 
     def trained_on(self, msg):
         for p in self.cache.values():

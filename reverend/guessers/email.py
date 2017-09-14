@@ -28,7 +28,7 @@ class EmailClassifier(Bayes):
         text = self.get_text_plain(msg)
         if text is None:
             text =  ''
-        tl = list(self._tokenizer.tokenize(text))
+        tl = list(self.tokenizer.tokenize(text))
         return tl
 
     def get_header_tokens(self, msg):
@@ -37,7 +37,7 @@ class EmailClassifier(Bayes):
         text +=  msg.get('from','fromnoone') + ' '
         text +=  msg.get('to','tonoone') + ' '
         text +=  msg.get('cc','ccnoone') + ' '
-        tl = list(self._tokenizer.tokenize(text))
+        tl = list(self.tokenizer.tokenize(text))
         return tl
           
     def get_text_plain(self, msg):
