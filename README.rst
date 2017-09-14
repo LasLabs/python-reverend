@@ -20,12 +20,19 @@ A simple example would look like:
    from reverend.thomas import Bayes
 
    guesser = Bayes()
+
    guesser.train('fish', 'salmon trout cod carp')
    guesser.train('fowl', 'hen chicken duck goose')
 
    guesser.guess('chicken tikka marsala')
+   #  Returns
+   #  [('fowl', 0.9999)]
 
-   You can also "forget" some training:
+
+You can also "forget" some training:
+
+.. code-block:: python
+
    guesser.untrain('fish', 'salmon carp')
 
 The first argument of ``train`` is the bucket or class that
@@ -36,7 +43,6 @@ The second argument is the object that you want Bayes to be
 trained on. By default, Bayes expects a string and uses something
 like ``string.split`` to break it into individual tokens (words).
 It uses these tokens as the basis of its bookkeeping.
-
 
 The two ways to extend it are:
 
@@ -51,6 +57,8 @@ The two ways to extend it are:
 
 Known Issues / Road Map
 =======================
+
+* Not compatible with Python 3
 
 Credits
 =======
