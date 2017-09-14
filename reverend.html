@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>reverend package &#8212; reverend 1.0.0b31 documentation</title>
+    <title>reverend package &#8212; reverend 1.0.0b37 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0.0b31',
+        VERSION:     '1.0.0b37',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -111,8 +111,30 @@ instance creation.</p>
 
 <dl class="method">
 <dt id="reverend.thomas.Bayes.guess">
-<code class="descname">guess</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.guess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.guess" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">guess</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.guess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.guess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Guess which buckets the message belongs to.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>message</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – The message string to tokenize and subsequently</li>
+<li><strong>classify.</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of tuple pairs indicating which bucket(s) the
+message string is guessed to be classified under, and the ratio of
+certainty for this guess. As an example, a 99% probability that
+the input is a <code class="docutils literal"><span class="pre">fowl</span></code> would look like <code class="docutils literal"><span class="pre">[('fowl',</span> <span class="pre">0.9999)]</span></code>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of tuple</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="reverend.thomas.Bayes.load">
@@ -192,9 +214,9 @@ want to call remove_pool() to get rid of it.</p>
 <code class="descname">rename_pool</code><span class="sig-paren">(</span><em>pool_name</em>, <em>new_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.rename_pool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.rename_pool" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="staticmethod">
 <dt id="reverend.thomas.Bayes.robinson">
-<code class="descname">robinson</code><span class="sig-paren">(</span><em>probs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.robinson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.robinson" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">robinson</code><span class="sig-paren">(</span><em>probs</em>, <em>_</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.robinson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.robinson" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the probability of a message being spam (Robinson’s method)
 P = 1 - prod(1-p)^(1/n)
 Q = 1 - prod(p)^(1/n)
@@ -202,9 +224,9 @@ S = (1 + (P-Q)/(P+Q)) / 2
 Courtesy of <a class="reference external" href="http://christophe.delord.free.fr/en/index.html">http://christophe.delord.free.fr/en/index.html</a></p>
 </dd></dl>
 
-<dl class="method">
+<dl class="staticmethod">
 <dt id="reverend.thomas.Bayes.robinson_fisher">
-<code class="descname">robinson_fisher</code><span class="sig-paren">(</span><em>probs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.robinson_fisher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.robinson_fisher" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">robinson_fisher</code><span class="sig-paren">(</span><em>probs</em>, <em>_</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/thomas.html#Bayes.robinson_fisher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.thomas.Bayes.robinson_fisher" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the probability of a message being spam (Robinson-Fisher method)
 H = C-1( -2.ln(prod(p)), 2*n )
 S = C-1( -2.ln(prod(1-p)), 2*n )

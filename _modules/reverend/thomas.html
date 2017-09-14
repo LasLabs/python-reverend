@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>reverend.thomas &#8212; reverend 1.0.0b31 documentation</title>
+    <title>reverend.thomas &#8212; reverend 1.0.0b37 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '1.0.0b31',
+        VERSION:     '1.0.0b37',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -311,20 +311,35 @@
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="Bayes.guess"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.guess">[docs]</a>    <span class="k">def</span> <span class="nf">guess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
-        <span class="n">tokens</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_tokens</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
+<div class="viewcode-block" id="Bayes.guess"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.guess">[docs]</a>    <span class="k">def</span> <span class="nf">guess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Guess which buckets the message belongs to.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            message (str): The message string to tokenize and subsequently</span>
+<span class="sd">            classify.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list of tuple: List of tuple pairs indicating which bucket(s) the</span>
+<span class="sd">            message string is guessed to be classified under, and the ratio of</span>
+<span class="sd">            certainty for this guess. As an example, a 99% probability that</span>
+<span class="sd">            the input is a ``fowl`` would look like ``[(&#39;fowl&#39;, 0.9999)]``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">tokens</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_tokens</span><span class="p">(</span><span class="n">message</span><span class="p">))</span>
         <span class="n">pools</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool_probs</span><span class="p">()</span>
 
         <span class="n">res</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">pname</span><span class="p">,</span> <span class="n">pprobs</span> <span class="ow">in</span> <span class="n">pools</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_probs</span><span class="p">(</span><span class="n">pprobs</span><span class="p">,</span> <span class="n">tokens</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">res</span><span class="p">[</span><span class="n">pname</span><span class="p">]</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">combiner</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pname</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">pool_name</span><span class="p">,</span> <span class="n">pool_probs</span> <span class="ow">in</span> <span class="n">pools</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_probs</span><span class="p">(</span><span class="n">pool_probs</span><span class="p">,</span> <span class="n">tokens</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+                <span class="n">res</span><span class="p">[</span><span class="n">pool_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">combiner</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pool_name</span><span class="p">)</span>
+
         <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-        <span class="n">res</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="nb">cmp</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">cmp</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
         <span class="k">return</span> <span class="n">res</span></div>
 
-<div class="viewcode-block" id="Bayes.robinson"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.robinson">[docs]</a>    <span class="k">def</span> <span class="nf">robinson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">probs</span><span class="p">):</span>
+<div class="viewcode-block" id="Bayes.robinson"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.robinson">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">robinson</span><span class="p">(</span><span class="n">probs</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Computes the probability of a message being spam (Robinson&#39;s method)</span>
 <span class="sd">            P = 1 - prod(1-p)^(1/n)</span>
 <span class="sd">            Q = 1 - prod(p)^(1/n)</span>
@@ -338,7 +353,8 @@
         <span class="n">S</span> <span class="o">=</span> <span class="p">(</span><span class="n">P</span> <span class="o">-</span> <span class="n">Q</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">P</span> <span class="o">+</span> <span class="n">Q</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">S</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span></div>
 
-<div class="viewcode-block" id="Bayes.robinson_fisher"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.robinson_fisher">[docs]</a>    <span class="k">def</span> <span class="nf">robinson_fisher</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">probs</span><span class="p">):</span>
+<div class="viewcode-block" id="Bayes.robinson_fisher"><a class="viewcode-back" href="../../reverend.html#reverend.thomas.Bayes.robinson_fisher">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">robinson_fisher</span><span class="p">(</span><span class="n">probs</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Computes the probability of a message being spam (Robinson-Fisher method)</span>
 <span class="sd">            H = C-1( -2.ln(prod(p)), 2*n )</span>
 <span class="sd">            S = C-1( -2.ln(prod(1-p)), 2*n )</span>

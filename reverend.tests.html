@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>reverend.tests package &#8212; reverend 1.0.0b31 documentation</title>
+    <title>reverend.tests package &#8212; reverend 1.0.0b37 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0.0b31',
+        VERSION:     '1.0.0b37',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -81,15 +81,25 @@ pool.</p>
 <span id="reverend-tests-test-thomas-module"></span><h2>reverend.tests.test_thomas module<a class="headerlink" href="#module-reverend.tests.test_thomas" title="Permalink to this headline">¶</a></h2>
 <p>Tests for L{reverend.thomas}.</p>
 <dl class="class">
-<dt id="reverend.tests.test_thomas.BayesTests">
-<em class="property">class </em><code class="descclassname">reverend.tests.test_thomas.</code><code class="descname">BayesTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/tests/test_thomas.html#BayesTests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.tests.test_thomas.BayesTests" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">twisted.trial._asynctest.TestCase</span></code></p>
+<dt id="reverend.tests.test_thomas.TestThomas">
+<em class="property">class </em><code class="descclassname">reverend.tests.test_thomas.</code><code class="descname">TestThomas</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/tests/test_thomas.html#TestThomas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.tests.test_thomas.TestThomas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
 <p>Tests for L{Bayes}.</p>
 <dl class="method">
-<dt id="reverend.tests.test_thomas.BayesTests.test_untrained_guess">
-<code class="descname">test_untrained_guess</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/tests/test_thomas.html#BayesTests.test_untrained_guess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.tests.test_thomas.BayesTests.test_untrained_guess" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C{guess} method of a L{Bayes} instance with no training data returns
-an empty list.</p>
+<dt id="reverend.tests.test_thomas.TestThomas.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/tests/test_thomas.html#TestThomas.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.tests.test_thomas.TestThomas.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="reverend.tests.test_thomas.TestThomas.test_guess_trained">
+<code class="descname">test_guess_trained</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/tests/test_thomas.html#TestThomas.test_guess_trained"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.tests.test_thomas.TestThomas.test_guess_trained" title="Permalink to this definition">¶</a></dt>
+<dd><p>It should return the proper guess when trained.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="reverend.tests.test_thomas.TestThomas.test_guess_untrained">
+<code class="descname">test_guess_untrained</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/reverend/tests/test_thomas.html#TestThomas.test_guess_untrained"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reverend.tests.test_thomas.TestThomas.test_guess_untrained" title="Permalink to this definition">¶</a></dt>
+<dd><p>It should return an empty list when not trained.</p>
 </dd></dl>
 
 </dd></dl>
