@@ -3,20 +3,29 @@
 Tests for L{reverend.thomas}.
 """
 
-from twisted.trial.unittest import TestCase
+from unittest import TestCase
 
 from reverend.thomas import Bayes
 
 
-class BayesTests(TestCase):
+class TestThomas(TestCase):
     """
     Tests for L{Bayes}.
     """
 
-    def test_untrained_guess(self):
-        """
-        The C{guess} method of a L{Bayes} instance with no training data returns
-        an empty list.
-        """
-        bayes = Bayes()
-        self.assertEquals(bayes.guess("hello, world"), [])
+    def setUp(self):
+        super(TestThomas, self).setUp()
+        self.bayes = Bayes()
+
+    def test_guess_untrained(self):
+        """It should return an empty list when not trained."""
+        self.assertEquals(self.bayes.guess("hello, world"), [])
+
+    def test_guess_trained(self):
+        """It should return the proper guess when trained."""
+        self.bayes.train('fish', 'salmon trout cod carp')
+        self.bayes.train('fowl', 'hen chicken duck goose')
+        self.assertEquals(
+            self.bayes.guess('chicken tikka marsala'),
+            [('fowl', 0.9999)],
+        )

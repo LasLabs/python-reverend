@@ -270,20 +270,35 @@ class Bayes(object):
                 return True
         return False
 
-    def guess(self, msg):
-        tokens = set(self.get_tokens(msg))
+    def guess(self, message):
+        """Guess which buckets the message belongs to.
+
+        Args:
+            message (str): The message string to tokenize and subsequently
+            classify.
+
+        Returns:
+            list of tuple: List of tuple pairs indicating which bucket(s) the
+            message string is guessed to be classified under, and the ratio of
+            certainty for this guess. As an example, a 99% probability that
+            the input is a ``fowl`` would look like ``[('fowl', 0.9999)]``.
+        """
+
+        tokens = set(self.get_tokens(message))
         pools = self.pool_probs()
 
         res = {}
-        for pname, pprobs in pools.items():
-            p = self.get_probs(pprobs, tokens)
-            if len(p) != 0:
-                res[pname]=self.combiner(p, pname)
+        for pool_name, pool_probs in pools.items():
+            p = self.get_probs(pool_probs, tokens)
+            if len(p):
+                res[pool_name] = self.combiner(p, pool_name)
+
         res = res.items()
-        res.sort(lambda x,y: cmp(y[1], x[1]))
+        res.sort(lambda x, y: cmp(y[1], x[1]))
         return res
 
-    def robinson(self, probs):
+    @staticmethod
+    def robinson(probs, _):
         """Computes the probability of a message being spam (Robinson's method)
             P = 1 - prod(1-p)^(1/n)
             Q = 1 - prod(p)^(1/n)
@@ -297,7 +312,8 @@ class Bayes(object):
         S = (P - Q) / (P + Q)
         return (1 + S) / 2
 
-    def robinson_fisher(self, probs):
+    @staticmethod
+    def robinson_fisher(probs, _):
         """Computes the probability of a message being spam (Robinson-Fisher method)
             H = C-1( -2.ln(prod(p)), 2*n )
             S = C-1( -2.ln(prod(1-p)), 2*n )
